@@ -1,0 +1,7 @@
+
+just-for-me.md
+mlmodel/__pycache__
+scraping/__pycache__
+proto/pipe_pb2.py
+proto/pipe_pb2.pyi
+proto/pipe_pb2_grpc.py
