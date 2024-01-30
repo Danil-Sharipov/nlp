@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import pipe_pb2 as pipe__pb2
+import proto.pipe_pb2 as pipe__pb2
 
 
 class PipeServerStub(object):

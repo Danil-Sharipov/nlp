@@ -1,8 +1,8 @@
 import asyncio
 import grpc
 from io import BytesIO
-from pipe_pb2_grpc import PipeServer, add_PipeServerServicer_to_server
-from pipe_pb2 import PipeRequest, PipeReply
+from proto.pipe_pb2_grpc import PipeServer, add_PipeServerServicer_to_server
+from proto.pipe_pb2 import PipeRequest, PipeReply
 import logging
 from time import perf_counter
 import configparser
@@ -21,6 +21,7 @@ class PipeServer(PipeServer):
         """
         print(pickle.loads(new[0]))
         return True
+
     async def inference(self, request: PipeRequest, context) -> PipeReply:
         """
         Основная логика получения данных
