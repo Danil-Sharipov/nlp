@@ -45,6 +45,24 @@ async def generator(x: int, y: int, last: int = 0, batch_size:int = 10) -> pd.Da
         y -= batch_size
         await asyncio.sleep(1)
 
+from collections import deque
+ls = deque()
+dataframe = True
+setting = set()
+async def concat():
+    global dataframe
+    if len(ls):
+        if dataframe:
+            print('init')
+            ls.popleft().to_csv('out.csv')
+            dataframe = False
+        else:
+            print('add')
+            ls.popleft().to_csv('out.csv',mode='a',header=False)
+            # dataframe = pd.concat([dataframe,ls.popleft()], ignore_index=True)
+
+
+
 async def check(df):
     """
     типо предобработка и отправка
@@ -52,18 +70,23 @@ async def check(df):
     df.rename(columns={"Time": "DATE", "id": "ID"},inplace=True)
     df.drop('publishDateTimestamp',axis=1,inplace=True)
     result = pr.Parser('rbc').update_data_frame(df)
-    await client.main(result)
+    ls.append(result)
+    task = asyncio.create_task(concat())
+    setting.add(task)
+    task.add_done_callback(setting.discard)
+    # await client.main(result)
     
     
 async def main(x: int, y: int = 100, last: int = 0, batch_size = 10):
     background_tasks = set()
-    logger = asyncio.create_task(client.logger())
+    # logger = asyncio.create_task(client.logger())
     async for i in generator(x,y,last,batch_size):
               task = asyncio.create_task(check(i))
               background_tasks.add(task)
               task.add_done_callback(background_tasks.discard)
     await asyncio.gather(*background_tasks)
-    await logger
+    await asyncio.gather(*setting)
+    # await logger
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -95,7 +118,8 @@ if __name__ == '__main__':
         '--batch_size',
         action = 'store',
         help = 'batch_size(maximum 100, default 10)',
-        default = 10
+        default = 10,
+        type = int
     )
 
     send_parser.add_argument(
@@ -103,7 +127,8 @@ if __name__ == '__main__':
         '--end',
         action = 'store',
         help = 'End datetime(not required)',
-        default = None
+        default = None,
+        type = int
     )
     # it
     it = subparsers.add_parser('it',help='Send news after parsing to server')
