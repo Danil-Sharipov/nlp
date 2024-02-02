@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+service PipeServer {
+  rpc inference (PipeRequest) returns (PipeReply) {}
+}
+
+message PipeRequest {
+    repeated bytes new = 1;
+}
+
+message PipeReply {
+    repeated bool ans = 1;
+}
