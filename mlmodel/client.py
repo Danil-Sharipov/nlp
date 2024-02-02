@@ -33,7 +33,8 @@ async def logger():
         await asyncio.sleep(10)
 
 async def main(df):
-    await asyncio.gather(client(df),logger())
+    # await asyncio.gather(client(df),logger())
+    await asyncio.gather(client(df))
 
 # if __name__ == '__main__':
 #     asyncio.run(main())
