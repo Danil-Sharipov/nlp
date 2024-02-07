@@ -5,7 +5,6 @@ from math import floor
 from time import sleep
 import asyncio
 import parser as pr
-import client
 import argparse
 
 def get_json(x: int, y: int) -> dict:
@@ -69,7 +68,7 @@ async def check(df):
     """
     df.rename(columns={"Time": "DATE", "id": "ID"},inplace=True)
     df.drop('publishDateTimestamp',axis=1,inplace=True)
-    result = pr.Parser('rbc').update_data_frame(df)
+    result = await pr.Parser('rbc').update_data_frame(df)
     ls.append(result)
     task = asyncio.create_task(concat())
     setting.add(task)

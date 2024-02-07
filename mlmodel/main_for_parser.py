@@ -51,7 +51,7 @@ async def check(df):
     """
     df.rename(columns={"Time": "DATE", "id": "ID"},inplace=True)
     df.drop('publishDateTimestamp',axis=1,inplace=True)
-    result = pr.Parser('rbc').update_data_frame(df)
+    result = await pr.Parser('rbc').update_data_frame(df)
     await client.main(result)
     
     
@@ -95,7 +95,8 @@ if __name__ == '__main__':
         '--batch_size',
         action = 'store',
         help = 'batch_size(maximum 100, default 10)',
-        default = 10
+        default = 10,
+        type = int
     )
 
     send_parser.add_argument(
@@ -103,7 +104,8 @@ if __name__ == '__main__':
         '--end',
         action = 'store',
         help = 'End datetime(not required)',
-        default = None
+        default = None,
+        type = int
     )
     # it
     it = subparsers.add_parser('it',help='Send news after parsing to server')
